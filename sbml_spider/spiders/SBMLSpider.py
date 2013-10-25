@@ -20,8 +20,11 @@ class SbmlSpider(CrawlSpider):
             tmp = json.load(f)
         self.urls = [x['Url'] for x in tmp]
         self.allowed_domains = []
-
-        self.start_urls = self.urls[0:1]
+        self.counter = 0
+        self.jumps = 0
+        self.maxJumps = 1000000
+        self.alreadyVisited = []
+        self.start_urls = self.urls
         self.rules = (
         # Extract links matching 'category.php' (but not matching 'subsection.php')
         # and follow links from them (since no callback means follow=True by default).
@@ -34,10 +37,18 @@ class SbmlSpider(CrawlSpider):
     def parse(self,response):
         hxs = HtmlXPathSelector(response)
         for url in hxs.select('//a/@href').extract():
-            if '#' not in url and 'html' in url:
-                print url
+            if 'xml' in url:
+                yield Request(url,callback=self.parseXML)
+            elif 'http' in url or 'www' in url and url not in self.alreadyVisited:
+                self.alreadyVisited.append(url)
+                #print len(self.alreadyVisited),url
                 yield Request(url, callback=self.parse)
 
     def parseXML(self,response):
         hxs = HtmlXPathSelector(response)
         print 'sbml' in hxs.extract_unquoted()
+        #if 'sbml' in hxs.extract_unquoted():
+        with open('results{0}.xml'.format(self.counter),'w') as f:
+            f.write(hxs.extract_unquoted())
+            f.flush()
+        self.counter += 1
