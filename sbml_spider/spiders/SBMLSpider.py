@@ -46,9 +46,9 @@ class SbmlSpider(CrawlSpider):
 
     def parseXML(self,response):
         hxs = HtmlXPathSelector(response)
-        print 'sbml' in hxs.extract_unquoted()
-        #if 'sbml' in hxs.extract_unquoted():
-        with open('results{0}.xml'.format(self.counter),'w') as f:
+        print 'sbml' in hxs.extract_unquoted(),self.counter
+        if 'sbml' in hxs.extract_unquoted():
+            f =  open('results{0}.xml'.format(self.counter),'w')
             f.write(hxs.extract_unquoted())
             f.flush()
-        self.counter += 1
+            self.counter += 1
