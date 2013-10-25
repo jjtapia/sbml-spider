@@ -49,7 +49,7 @@ class SbmlSpider(CrawlSpider):
         hxs = HtmlXPathSelector(response)
         print 'sbml' in hxs.extract_unquoted(),self.counter
         if 'sbml' in hxs.extract_unquoted():
-            f =  open('results{0}.xml'.format(self.counter),'w')
+            f =  open('results{0}.xml'.format(random.randint(0,1000000)),'w')
             f.write(hxs.extract_unquoted())
             f.flush()
             self.counter += 1
