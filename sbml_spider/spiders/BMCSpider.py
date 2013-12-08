@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct 24 14:36:33 2013
+Created on Sun Dec  8 14:06:09 2013
 
 @author: proto
 """
+
 import json
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.spiders import  CrawlSpider,Rule
@@ -13,16 +14,15 @@ from sbml_spider.items import SbmlSpiderItem
 import random
 import urlparse
 import cPickle as pickle
-from collections import Counter
-class SbmlSpider(CrawlSpider):
-    name = 'sbml'
+class BMCSpider(CrawlSpider):
+    name = 'bmc'
     
     def __init__(self, start_urls=[], output='.',*args, **kwargs):
-        super(SbmlSpider, self).__init__(*args, **kwargs)
+        super(BMCSpider, self).__init__(*args, **kwargs)
         with open('results.json') as f:    
             tmp = json.load(f)
         self.urls = [x['Url'] for x in tmp]
-        self.allowed_domains = ['www.plosone.org','http://www.biomedcentral.com/']
+        self.allowed_domains = ['http://www.biomedcentral.com/']
         self.deny_domains= ["www.youtube.com","www.facebook.com",
                             "www.reddit.com","www.twitter.com","www.ebay.com","pages.ebay.com",
                             "www.today.com","www.google.com","www.bing.com","www.yahoo.com",
